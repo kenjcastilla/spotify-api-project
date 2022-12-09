@@ -6,7 +6,9 @@ WARNING: If you don't have a Spotify account, then cloning and running won't wor
 To use:
 First, follow directions in [tokens.py](tokens.py) for Spotify authorization.
 
-	(1) Observe ([spotify_track_habits.ipynb](spotify_track_habits.ipynb), and run all cells 
-	(2) Run "main.py", and see changes in your Spotify library.
+(1) Observe [spotify_track_habits.ipynb](spotify_track_habits.ipynb), and run all cells 
 
-Be sure to check your own Spotify playlist to see the changes!
+(2) Run [main.py](main.py), and see changes in your Spotify library.
+
+
+Be sure to check your own Spotify library to see the changes!
