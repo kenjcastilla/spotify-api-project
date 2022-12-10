@@ -1,6 +1,6 @@
 import requests
 import json
-from secrets import token_remove_tracks, token_get_playlist, token_create, token_add_tracks, \
+from tokens import token_remove_tracks, token_get_playlist, token_create, token_add_tracks, \
     token_top_artists, token_top_tracks
 from pprint import pprint
 
@@ -74,7 +74,7 @@ def get_playlist():
     #return uris
 
 
-# Remove tracks from playlist
+# Remove all tracks from playlist
 def remove_from_playlist():
     print('REMOVE FROM PLAYLIST\n\n')
     headers = {
@@ -91,6 +91,7 @@ def remove_from_playlist():
                         headers=headers,
                         )
     r = r.json()
+    print(r)
 
 
 # Add user's top tracks to playlist
@@ -108,7 +109,6 @@ def add_to_playlist():
     r = requests.post(url,
                       data=data,
                       headers=headers,
-
                       )
     r = r.json()
     print('ADD TO PLAYLIST\n')
