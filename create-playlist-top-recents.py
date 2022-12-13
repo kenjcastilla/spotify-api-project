@@ -4,9 +4,10 @@ import json
 import os
 import numpy as np
 from pprint import pprint
+from tokens import token_top_tracks
 
 # Access token from https://developer.spotify.com/console/get-current-user-top-artists-and-tracks
-access_token = 'BQBWv5ISaHwxP_Ue8iM9hPfWRKZ4C7n5PXX3lFuD8Af8cq5HGlg4smdgz9u3HvrUMBo7m_56z91O6JwqUKbCPfbKdI7H8EenrX6K1bbNJF6toJu-zKTHP7fEevZZr7jsHZKsroLJ_qOsUIPjorVaRW_fmcJ_ZMPK_W3Om2nCQHKW6v4iNikro__-XPkB3RgfApSaQbOwpXVTPB7tKB1MSdC9iVblpsOBdysXB_aBDbNzHA'
+access_token = token_top_tracks
 
 headers = {
     'Authorization': f'Bearer {access_token}',
