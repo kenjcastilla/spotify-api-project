@@ -57,35 +57,50 @@ def get_playlist():
                      headers=headers,
                      )
     r = r.json()
-    print(r)
+    #print(r, width=2)
 
+    snapshot_id = r['snapshot_id']
     uris = []
+    names = []
     pos = 1
     for item in r['tracks']['items']:
-        pprint(item, width=2)
+        #pprint(item, width=2)
         uri = item['track']['uri']
         uris.append(uri)
+        name = item['track']['name']
+        names.append(name)
         pos += 1
 
-    tracks = ','.join(uris)
-    print(tracks, '\n')
+    tracks_uri = ','.join(uris)
+    print(tracks_uri, '\n')
     _separate_section()
 
-    #return uris
+    return uris, names, snapshot_id
 
 
 # Remove all tracks from playlist
 def remove_from_playlist():
     print('REMOVE FROM PLAYLIST\n\n')
     headers = {
-        'Authorization': f'Bearer {token_remove_tracks}',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
+        'Authorization': f'Bearer {token_remove_tracks}',
     }
     playlist_id = '5ZxRxpARcooxJGQHHu0gkB'
 
-    url = f'{BASE_URL}/playlists/{playlist_id}/tracks'
+    url = f'{BASE_URL}playlists/{playlist_id}/tracks'
 
-    data = json.dumps({'uris': get_playlist()})
+    playlist = get_playlist()
+    tracks_uri = playlist[0]
+    uris = []
+    for uri in tracks_uri:
+        uris.append({'uri': uri})
+    snapshot_id = playlist[2]
+    data = json.dumps({
+        'tracks': uris,
+        'snapshot_id': snapshot_id
+    })
+    pprint(data)
     r = requests.delete(url,
                         data=data,
                         headers=headers,
@@ -112,8 +127,22 @@ def add_to_playlist():
                       )
     r = r.json()
     print('ADD TO PLAYLIST\n')
-    print(r, '\n')
+    #print(r, '\n')
 
+    _separate_section()
+
+
+# Shows which tracks are no longer in playlist
+def not_in_new(old, new):
+    print('NO LONGER IN TOP RECENTS:\n\t')
+    indices = []
+    for uri in old[0]:
+        if uri not in new[0]:
+            i = indices.append(new[0].index(uri))
+            print(f'\t{new[1][i]}\n')
+    """for track in old:
+        if track in new:
+            print(f'{track}\n')"""
     _separate_section()
 
 
@@ -122,4 +151,5 @@ def _separate_section():
     Separates console outputs by printing a dashed line
     """
     print('--------------------------------------------------------------------------------------\n')
+
 
