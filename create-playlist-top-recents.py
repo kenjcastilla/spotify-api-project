@@ -30,13 +30,3 @@ r = requests.post(f'{BASE_URL}users/kencastilla/playlists',
 r = r.json()
 
 pprint(r)
-
-"""
-tracks_id = []
-pos = 1
-# Add each track id to a list
-for item in r['items']:
-    track_id = item['id']
-    tracks_id.append(track_id)
-    pos+=1
-"""
