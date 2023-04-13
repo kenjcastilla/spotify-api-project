@@ -80,3 +80,5 @@ def get_access_token():
 
     return r.json()['access_token']
 
+
+get_access_token()
