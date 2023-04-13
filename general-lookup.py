@@ -1,11 +1,12 @@
-import os
+from dotenv import load_dotenv
+from os import getenv
 import requests
 from pprint import pprint
 from playlist_functions import _separate_section
 
 # Assign environment variable values to local variables
-CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
-CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
+CLIENT_ID = getenv('SPOTIFY_CLIENT_ID')
+CLIENT_SECRET = getenv('SPOTIFY_CLIENT_SECRET')
 
 AUTH_URL = 'https://accounts.spotify.com/api/token'
 
@@ -38,13 +39,22 @@ def get_id():
 
     while ta.lower() not in valid:
         ta = input("Track or Artist? ")
+
     if ta in valid[0:2]:
-        identifier = input("Enter Track ID here: ")
+        identifier = input("Enter Track ID or URL here: ")
+        while len(identifier) < 22:
+            identifier = input("Try again. Enter Track ID or URL here: ")
+        if len(identifier) > 22:
+            identifier = identifier[identifier.rindex('/')+1:identifier.rindex('?')]
         # identifier = '7beF9ncmC9V1NzczO8pGvA'
         _get_track(identifier)
     else:
-        identifier = input("Enter Artist ID here: ")
-        # identifier = 14YzutUdMwS9yTnI0IFBaD
+        identifier = input("Enter Artist ID or URL here: ")
+        while len(identifier) < 22:
+            identifier = input("Enter Artist ID or URL here: ")
+        if len(identifier) > 22:
+            identifier = identifier[identifier.rindex('/')+1:identifier.rindex('?')]
+
         _get_artist(identifier)
 
 

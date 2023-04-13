@@ -1,18 +1,21 @@
 import requests
 import json
-from tokens import token_remove_tracks, token_get_playlist, token_create, token_add_tracks, \
-    token_top_artists, token_top_tracks
 from pprint import pprint
+from dotenv import load_dotenv
+from os import getenv
+
+load_dotenv()
+PLAYLIST_ID = getenv('TOP_TRACKS_PLAYLIST')
 
 # Base url for all Spotify API calls
 BASE_URL = 'https://api.spotify.com/v1/'
 
 
 # Get user's top tracks
-def get_top_tracks(limit: int = 50):
+def get_top_tracks(access_token, limit: int = 50):
     print('TOP TRACKS\n\n')
     headers = {
-        'Authorization': f'Bearer {token_top_tracks}',
+        'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json',
     }
     r = requests.get(f'{BASE_URL}me/top/tracks',
@@ -21,8 +24,9 @@ def get_top_tracks(limit: int = 50):
                          'limit': limit,
                          'time_range': 'short_term',
                      })
+    print(r.url)
     r = r.json()
-
+    print(r)
     uris = []
     pos = 1
     for item in r['items']:
@@ -45,26 +49,24 @@ def get_top_tracks(limit: int = 50):
 
 
 # Get playlist
-def get_playlist():
+def get_playlist(access_token):
     print('PLAYLIST\n')
     headers = {
-        'Authorization': f'Bearer {token_get_playlist}',
+        'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json',
     }
-    playlist_id = '5ZxRxpARcooxJGQHHu0gkB'
+    playlist_id = PLAYLIST_ID
     query = f'{BASE_URL}playlists/{playlist_id}'
-    r = requests.get(query,
-                     headers=headers,
-                     )
+    r = requests.get(query, headers=headers)
     r = r.json()
-    #print(r, width=2)
+    # print(r, width=2)
 
     snapshot_id = r['snapshot_id']
     uris = []
     names = []
     pos = 1
     for item in r['tracks']['items']:
-        #pprint(item, width=2)
+        # pprint(item, width=2)
         uri = item['track']['uri']
         uris.append(uri)
         name = item['track']['name']
@@ -79,18 +81,18 @@ def get_playlist():
 
 
 # Remove all tracks from playlist
-def remove_from_playlist():
+def remove_from_playlist(access_token):
     print('REMOVE FROM PLAYLIST\n\n')
     headers = {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': f'Bearer {token_remove_tracks}',
+        'Authorization': f'Bearer {access_token}',
     }
     playlist_id = '5ZxRxpARcooxJGQHHu0gkB'
 
     url = f'{BASE_URL}playlists/{playlist_id}/tracks'
 
-    playlist = get_playlist()
+    playlist = get_playlist(access_token)
     tracks_uri = playlist[0]
     uris = []
     for uri in tracks_uri:
@@ -110,16 +112,16 @@ def remove_from_playlist():
 
 
 # Add user's top tracks to playlist
-def add_to_playlist():
+def add_to_playlist(access_token):
     playlist_id = '5ZxRxpARcooxJGQHHu0gkB'
     url = f'{BASE_URL}playlists/{playlist_id}/tracks'
     headers = {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': f'Bearer {token_add_tracks}',
+        'Authorization': f'Bearer {access_token}',
         'Content-Length': '50',
     }
-    data = json.dumps({'uris': get_top_tracks()})
+    data = json.dumps({'uris': get_top_tracks(access_token)})
 
     r = requests.post(url,
                       data=data,
@@ -127,7 +129,7 @@ def add_to_playlist():
                       )
     r = r.json()
     print('ADD TO PLAYLIST\n')
-    #print(r, '\n')
+    # print(r, '\n')
 
     _separate_section()
 
@@ -135,14 +137,30 @@ def add_to_playlist():
 # Shows which tracks are no longer in playlist
 def not_in_new(old, new):
     print('NO LONGER IN TOP RECENTS:\n\t')
-    indices = []
-    for uri in old[0]:
-        if uri not in new[0]:
-            i = indices.append(new[0].index(uri))
-            print(f'\t{new[1][i]}\n')
-    """for track in old:
-        if track in new:
-            print(f'{track}\n')"""
+    stale = []
+    fresh = []
+    # Identify fresh tracks
+    for uri in new[0]:
+        track_num = new[0].index(uri) + 1
+        track_name = new[1][track_num - 1]
+        track = (track_num, track_name)
+
+        # Identify stale tracks
+        if uri in old[0]:
+            stale.append(track)
+
+        # Identify fresh tracks
+        else:
+            fresh.append(track)
+
+    print(f'STALE: ')
+    for t in stale:
+        print(f'\t{t[0]}) "{t[1]}"')
+    # print(f'\t{j}\n' for j in stale)
+    print(f'\nFRESH: ')
+    for t in fresh:
+        print(f'\t{t[0]}) "{t[1]}"')
+
     _separate_section()
 
 
@@ -151,5 +169,3 @@ def _separate_section():
     Separates console outputs by printing a dashed line
     """
     print('--------------------------------------------------------------------------------------\n')
-
-
