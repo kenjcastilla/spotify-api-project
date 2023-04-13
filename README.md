@@ -5,7 +5,7 @@ WARNING: If you don't have a Spotify account, then cloning and running won't wor
 
 To use:
 
-1. **Add a .env file** with environment variables SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_PROFILE_EMAIL, SPOTIFY_PROFILE_PASSWORD, and TOP_TRACKS_PLAYLIST. **This is mandatory for the functionality of the project.**
+1. **Add a .env file** with environment variables SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_PROFILE_EMAIL, SPOTIFY_PROFILE_PASSWORD, SPOTIFY_PROFILE_USERNAME, and TOP_TRACKS_PLAYLIST. **This is mandatory for the functionality of the project.**
 
 2. Run [main.py](main.py). Comment out whichever functions you don't want to use.
 
