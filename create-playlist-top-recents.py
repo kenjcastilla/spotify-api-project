@@ -9,7 +9,7 @@ from tokens import get_access_token
 access_token = get_access_token()
 
 load_dotenv()
-SPOTIFY_USERNAME = getenv(SPOTIFY_PROFILE_USERNAME)
+SPOTIFY_USERNAME = getenv('SPOTIFY_PROFILE_USERNAME')
 
 headers = {
     'Authorization': f'Bearer {access_token}',
