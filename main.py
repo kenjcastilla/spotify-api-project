@@ -1,13 +1,16 @@
-from playlist_functions import get_top_tracks, get_playlist, remove_from_playlist, add_to_playlist, not_in_new
+from tokens import get_access_token
 
-#get_top_tracks()
+token = ''
+token = get_access_token()
 
-old = get_playlist()
+get_top_tracks(token, 50)
 
-#remove_from_playlist()
+old = get_playlist(token)
 
-#add_to_playlist()
+remove_from_playlist(token)
 
-new = get_playlist()
+add_to_playlist(token)
+
+new = get_playlist(token)
 
 not_in_new(old, new)
