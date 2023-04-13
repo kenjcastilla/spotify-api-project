@@ -1,13 +1,15 @@
 # Import necessary dependencies
 import requests
 import json
-import os
-import numpy as np
+from dotenv import load_dotenv
+from os import getenv
 from pprint import pprint
-from tokens import token_top_tracks
+from tokens import get_access_token
 
-# Access token from https://developer.spotify.com/console/get-current-user-top-artists-and-tracks
-access_token = token_top_tracks
+access_token = get_access_token()
+
+load_dotenv()
+SPOTIFY_USERNAME = getenv(SPOTIFY_PROFILE_USERNAME)
 
 headers = {
     'Authorization': f'Bearer {access_token}',
@@ -23,7 +25,7 @@ data = json.dumps({
                     'description': 'generated using python and spotify official api',
                     'public': False
 })
-r = requests.post(f'{BASE_URL}users/kencastilla/playlists',
+r = requests.post(f'{BASE_URL}users/{SPOTIFY_USERNAME}/playlists',
                   data=data,
                   headers=headers,
                   )
