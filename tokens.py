@@ -5,8 +5,8 @@ from urllib.parse import urlencode
 import secrets
 import string
 import base64
-from selenium.webdriver.chrome.service import Service
-from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -41,8 +41,9 @@ def get_access_token():
     }
 
     authorize_url = "https://accounts.spotify.com/authorize?" + urlencode(params)
-    service = Service(executable_path="/opt/homebrew/Caskroom/chromedriver/112.0.5615.49/chromedriver")
-    with webdriver.Chrome(service=service) as driver:
+    service = ChromeService(executable_path="/opt/homebrew/Caskroom/chromedriver/112.0.5615.49/chromedriver")
+    options = ChromeOptions().add_argument("--headless")
+    with Chrome(service=service, options=options) as driver:
         driver.get(authorize_url)  # Opens Spotify login page for authorization
         my_current_url = driver.current_url  # Save URL to check for page redirect later
         login_username = driver.find_element(By.ID, 'login-username')
@@ -60,7 +61,7 @@ def get_access_token():
     beg = my_current_url.index('code') + 5
     end = my_current_url.rindex('&')
     code = my_current_url[beg:end]
-    print('code: ', code)
+    #print('code: ', code)
 
     # Step 2
     base_url = 'https://accounts.spotify.com/api/token'
@@ -81,4 +82,4 @@ def get_access_token():
     return r.json()['access_token']
 
 
-get_access_token()
+#get_access_token()
